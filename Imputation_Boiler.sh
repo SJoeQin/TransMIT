@@ -4,7 +4,7 @@ fix_seed=${1:-2025}  # default = 2025 if no argument provided
 
 python -u run.py \
   --fix_seed $fix_seed \
-  --data_name 'FTD' \
+  --data_name 'Boiler' \
   --miss_rate 0.1 \
   --batch_size 32\
   --lr 0.0005 \
@@ -18,7 +18,7 @@ python -u run.py \
 
 python -u run.py \
   --fix_seed $fix_seed \
-  --data_name 'FTD' \
+  --data_name 'Boiler' \
   --miss_rate 0.2 \
   --batch_size 32\
   --lr 0.0005 \
@@ -32,7 +32,7 @@ python -u run.py \
 
   python -u run.py \
   --fix_seed $fix_seed \
-  --data_name 'FTD' \
+  --data_name 'Boiler' \
   --miss_rate 0.3 \
   --batch_size 32\
   --lr 0.0005 \
@@ -46,7 +46,7 @@ python -u run.py \
 
 python -u run.py \
   --fix_seed $fix_seed \
-  --data_name 'FTD' \
+  --data_name 'Boiler' \
   --miss_rate 0.4 \
   --batch_size 32\
   --lr 0.0005 \
@@ -60,7 +60,7 @@ python -u run.py \
 
 python -u run.py \
   --fix_seed $fix_seed \
-  --data_name 'FTD' \
+  --data_name 'Boiler' \
   --miss_rate 0.5 \
   --batch_size 32\
   --lr 0.0005 \
