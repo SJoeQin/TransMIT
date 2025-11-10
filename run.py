@@ -22,15 +22,14 @@ def main (args):
     - iterations: iterations
     
   Returns:
-    - imputed_data_x: imputed data
-    - rmse: Root Mean Squared Error
+    - rmse: Root Mean Squared Error on Test Set
+    - mae: Mean Absolute Error on Test Set
   '''
   
   data_name = args.data_name
   miss_rate = args.miss_rate
   
   # Load data and introduce missingness
-  #data_x, data_m = data_loader(data_name, miss_rate)
   data_x = data_loader(data_name)
   data_m = np.random.rand(*data_x.shape) > miss_rate
   data_m = data_m.astype(float)
@@ -39,7 +38,7 @@ def main (args):
   s = args.s
   train_size = int(round(data_x.shape[0] * 0.8))
   train_data = data_x[:train_size, :]
-  test_data = data_x[train_size-s:, :]  #
+  test_data = data_x[train_size-s:, :]  
   data_m_train = data_m[:train_size, :]
   data_m_test = data_m[train_size-s:, :]
   test_mask = test_data*data_m_test 
@@ -118,7 +117,7 @@ if __name__ == '__main__':
   parser.add_argument(
       '--d_q',
       help='d_q',
-      default=128,
+      default=64,
       type=int)
   parser.add_argument(
       '--num_layers',
