@@ -60,7 +60,6 @@ def iTransformer(train_data, missing_matrix, TransMIT_parameters):
       ffn_output = tf.keras.layers.Dense(d_model)(x_t)
       x_t = tf.keras.layers.LayerNormalization(epsilon=1e-6)(x_t + ffn_output)
     
-  #x_t = tf.keras.layers.Dense(seq_length)(x_t)
   x_t = tf.keras.layers.Permute((2, 1))(x_t)
   outputs = tf.keras.layers.GlobalAveragePooling1D()(x_t)
   outputs = tf.keras.layers.Dense(num_features)(outputs)
@@ -87,6 +86,4 @@ def iTransformer(train_data, missing_matrix, TransMIT_parameters):
   trainsize = int(round(train_x.shape[0] * 0.8)/Epochs)*Epochs
   history = model.fit(train_x[:trainsize], train_y[:trainsize], batch_size=batch_size, epochs=Epochs, validation_data=(train_x[trainsize:], train_y[trainsize:]),
                       validation_batch_size=Epochs,callbacks=[es],verbose=0)
-  # history = model.fit(train_train_x, train_train_y, batch_size=batch_size, epochs=Epochs, validation_data=(train_val_x, train_val_y),
-  #                     validation_batch_size=Epochs,callbacks=[es],verbose=0)  
   return model 
