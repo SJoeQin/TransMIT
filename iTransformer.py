@@ -3,21 +3,21 @@ import numpy as np
 from utils import split_sequences_TransMIT
 
 def iTransformer(train_data, missing_matrix, TransMIT_parameters):
-  '''Train
+  '''Train 
   
   Args:
-    - data: original data with missing values
+    - train_data: data with missing values for model training
+    - missing_matrix: indicating the missing status of each elements of train_data 
     - TransMIT_parameters: TransMIT model parameters
-      - train_size:
-      - s: 
-      - alpha: 
       - batch_size: Batch size
-      - num_layers:
-      - d_model:
-      - d_q: 
-      - num_heads:
       - lr: Learning rate
-      - epochs: Epochs
+      - epochs: Epochs 
+      - alpha: a parameter to balance the reconstuction error and imputation error  
+      - s: Sequence length 
+      - num_layers: Number of attention layers 
+      - d_model: Dimenson of FFN 
+      - d_q: Dimension of Q/K/V
+      - num_heads: Number of attention heads
       
   Returns:
     - model: Trained model
