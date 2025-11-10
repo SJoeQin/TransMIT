@@ -6,7 +6,8 @@ def TransMIT(train_data, missing_matrix, TransMIT_parameters):
   '''Train
   
   Args:
-    - data: original data with missing values
+    - train_data: data with missing values for model training
+    - missing_matrix: indicating the missing status of each elements of train_data 
     - TransMIT_parameters: TransMIT model parameters
       - train_size:
       - s: 
