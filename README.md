@@ -12,9 +12,9 @@ pip install -r requirements.txt
 
 3. Train and evaluate model. Run the experiment scripts. Below is an example: 
 
-'''
+```
 bash ./Imputation_FTD.sh
-'''
+```
 
 
 
