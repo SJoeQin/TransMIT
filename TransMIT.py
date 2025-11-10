@@ -12,7 +12,7 @@ def TransMIT(train_data, missing_matrix, TransMIT_parameters):
       - batch_size: Batch size
       - lr: Learning rate
       - epochs: Epochs 
-      - alpha: 
+      - alpha: a parameter to balance the reconstuction error and imputation error  
       - s: Sequence length 
       - num_layers: Number of attention layers 
       - d_model: Dimenson of FFN 
@@ -38,17 +38,18 @@ def TransMIT(train_data, missing_matrix, TransMIT_parameters):
 
   #Data preprocessing
   train_mask = train_data*missing_matrix
-  train_x, train_y = split_sequences_TransMIT(train_data, s) #
-  train_x[:,-1,:] = train_mask[s:,:]  
+  train_x, train_y = split_sequences_TransMIT(train_data, s) #construt sub-sequence by sliding window approach with size 1 
+  train_x[:,-1,:] = train_mask[s:,:] # Artifically mask some observed values as missing values  
+  #shuffle the training set
   indices = tf.range(start=0, limit=tf.shape(train_x)[0], dtype=tf.int32)
   shuffled_indices = tf.random.shuffle(indices)
   train_x = tf.gather(train_x,shuffled_indices)
   train_y = tf.gather(train_y,shuffled_indices)
   
-  # Define the input and output data
+  # Define the model 
   inputs = tf.keras.layers.Input(shape=(seq_length, num_features))
   mask = tf.keras.layers.Lambda(lambda x: tf.cast(tf.math.not_equal(x, 0), tf.float32))(inputs)
-  mask = mask[:,-1,:]
+  mask = mask[:,-1,:] #only keep the mask matrix of current step for each sub-sequence
   Inputs = tf.keras.layers.Dense(d_model)(inputs)
   Inputs_t = tf.keras.layers.Permute((2, 1))(inputs)
   Inputs_t = tf.keras.layers.Dense(d_model)(Inputs_t)
@@ -59,7 +60,6 @@ def TransMIT(train_data, missing_matrix, TransMIT_parameters):
       x = tf.keras.layers.LayerNormalization(epsilon=1e-6)(x + attn_output)
       ffn_output = tf.keras.layers.Dense(d_model)(x)
       x = tf.keras.layers.LayerNormalization(epsilon=1e-6)(x + ffn_output)
-      #x = tf.keras.layers.Dense(d_model)(x)
   for i in range(num_layers):
       attn_output = tf.keras.layers.MultiHeadAttention(num_heads=num_heads, key_dim=d_q, value_dim=d_q, dropout=0.1)(x_t, x_t, x_t, attention_mask=None)
       x_t = tf.keras.layers.LayerNormalization(epsilon=1e-6)(x_t + attn_output)
@@ -82,14 +82,14 @@ def TransMIT(train_data, missing_matrix, TransMIT_parameters):
     total_elements = tf.cast(tf.size(mask), tf.float32)
     count_nonzeros = tf.math.count_nonzero(mask,dtype=tf.float32)
     count_zeros = total_elements-count_nonzeros
-    reconstruction_loss = tf.math.reduce_mean(tf.math.square(tf.math.multiply(y_true, mask) - tf.math.multiply(y_pred[:,:n], mask)))*total_elements/count_nonzeros
-    imputation_loss = tf.math.reduce_mean(tf.math.square(tf.math.multiply(y_true, 1-mask) - tf.math.multiply(y_pred[:,:n], 1-mask)))*total_elements/count_zeros
+    reconstruction_loss = tf.sqrt(tf.math.reduce_mean(tf.math.square(tf.math.multiply(y_true, mask) - tf.math.multiply(y_pred[:,:n], mask)))*total_elements/count_nonzeros)
+    imputation_loss = tf.sqrt(tf.math.reduce_mean(tf.math.square(tf.math.multiply(y_true, 1-mask) - tf.math.multiply(y_pred[:,:n], 1-mask)))*total_elements/count_zeros)
     loss = alpha*reconstruction_loss+(1-alpha)*imputation_loss
-    return loss
-      
+    return loss   
   adam = tf.keras.optimizers.Adam(learning_rate=lr)
   model.compile(loss= MSE_TransMIT, optimizer=adam)
   es = tf.keras.callbacks.EarlyStopping(monitor='val_loss', mode='min', verbose=1,patience=5)
+  
   # Train the model
   Epochs = epochs
   trainsize = int(round(train_x.shape[0] * 0.8)/Epochs)*Epochs
