@@ -11,15 +11,13 @@ from TransMIT import TransMIT
 from utils import split_sequences_TransMIT, train_test_split, online_imputation
 
 def main (args):
-  '''Main function for UCI letter and spam datasets.
+  '''Main function for flight test dataset and boiler dataset.
   
   Args:
-    - data_name: letter or spam
+    - data_name: FTD or Boiler
     - miss_rate: probability of missing components
-    - batch_size: batch size
-    - hint_rate: hint rate
-    - alpha: hyperparameter
-    - iterations: iterations
+    - s: sequence length
+    - TransMIT_parameters....
     
   Returns:
     - rmse: Root Mean Squared Error on Test Set
