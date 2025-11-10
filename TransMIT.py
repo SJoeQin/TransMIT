@@ -9,10 +9,10 @@ def TransMIT(train_data, missing_matrix, TransMIT_parameters):
     - train_data: data with missing values for model training
     - missing_matrix: indicating the missing status of each elements of train_data 
     - TransMIT_parameters: TransMIT model parameters
-      - train_size:
+      - batch_size: Batch size
+      - 
       - s: sequence length 
       - alpha: 
-      - batch_size: Batch size
       - num_layers:
       - d_model:
       - d_q: 
@@ -25,7 +25,6 @@ def TransMIT(train_data, missing_matrix, TransMIT_parameters):
   '''
 
   # System parameters
-  train_size = TransMIT_parameters['train_size']
   batch_size = TransMIT_parameters['batch_size']
   lr = TransMIT_parameters['lr']
   epochs = TransMIT_parameters['epochs']
