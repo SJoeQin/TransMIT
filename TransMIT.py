@@ -3,22 +3,21 @@ import numpy as np
 from utils import split_sequences_TransMIT
 
 def TransMIT(train_data, missing_matrix, TransMIT_parameters):
-  '''Train
+  '''Train 
   
   Args:
     - train_data: data with missing values for model training
     - missing_matrix: indicating the missing status of each elements of train_data 
     - TransMIT_parameters: TransMIT model parameters
       - batch_size: Batch size
-      - 
-      - s: sequence length 
+      - lr: Learning rate
+      - epochs: Epochs 
       - alpha: 
-      - num_layers:
-      - d_model:
-      - d_q: 
-      - num_heads:
-      - lr: learning rate
-      - epochs: Epochs
+      - s: Sequence length 
+      - num_layers: Number of attention layers 
+      - d_model: Dimenson of FFN 
+      - d_q: Dimension of Q/K/V
+      - num_heads: Number of attention heads
       
   Returns:
     - model: Trained model
@@ -34,13 +33,12 @@ def TransMIT(train_data, missing_matrix, TransMIT_parameters):
   d_q = TransMIT_parameters['d_q']
   num_layers = TransMIT_parameters['num_layers']
   num_heads = TransMIT_parameters['num_heads']
-  #
-  seq_length = s+1
-  num_features = train_data.shape[1]
+  seq_length = s+1 # previous s steps and current step data
+  num_features = train_data.shape[1] 
 
-  #
+  #Data preprocessing
   train_mask = train_data*missing_matrix
-  train_x, train_y = split_sequences_TransMIT(train_data, s)
+  train_x, train_y = split_sequences_TransMIT(train_data, s) #
   train_x[:,-1,:] = train_mask[s:,:]  
   indices = tf.range(start=0, limit=tf.shape(train_x)[0], dtype=tf.int32)
   shuffled_indices = tf.random.shuffle(indices)
