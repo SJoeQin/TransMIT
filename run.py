@@ -49,8 +49,7 @@ def main (args):
   data_train = scaler.fit_transform(train_data)
   data_test = scaler.transform(test_data)
 
-  TransMIT_parameters = {'train_size':train_size,
-                         'batch_size':args.batch_size,
+  TransMIT_parameters = {'batch_size':args.batch_size,
                          'lr':args.lr,
                          'epochs':args.epochs,
                          'alpha':args.alpha,
